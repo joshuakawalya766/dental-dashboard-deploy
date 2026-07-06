@@ -1,0 +1,9 @@
+# Linux-only override: host networking so the phone-QR detects the clinic PC's current
+# LAN IP live (auto-heals across Wi-Fi / hotspot switches). Start with BOTH files:
+#   docker compose -f docker-compose.yml -f docker-compose.linux.yml up -d
+# If a firewall is on, allow the ports once:
+#   sudo ufw allow 4500/tcp && sudo ufw allow 4543/tcp
+# (Host mode publishes the ports directly; the base "ports:" mapping is ignored — harmless warning.)
+services:
+  dashboard:
+    network_mode: host

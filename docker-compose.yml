@@ -1,0 +1,19 @@
+# IDEAL Dental — clinic deployment (pulls the prebuilt image; NO source code needed).
+# Start:  docker compose up -d      Stop:  docker compose down      Update:  docker compose pull && docker compose up -d
+# Your clinic data + photos live in ./data and ./images (created on first run) and survive updates.
+services:
+  dashboard:
+    image: ghcr.io/joshuakawalya766/dental-dashboard:latest
+    container_name: dental-dashboard
+    ports:
+      - "4500:4500"     # http  — open on this computer
+      - "4543:4543"     # https — for sharing to WhatsApp from a phone
+    volumes:
+      - ./data:/app/data
+      - ./images:/app/images
+    environment:
+      - PORT=4500
+      - HTTPS_PORT=4543
+      - HOST_LAN_IP=${HOST_LAN_IP:-}
+      - GHCR_TOKEN=${GHCR_TOKEN:-}    # read-only, for the opportunistic "update available" check (from .env)
+    restart: unless-stopped
