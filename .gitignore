@@ -4,6 +4,7 @@ ghcr-token.txt
 # runtime data created on the clinic machine
 data/
 images/
+exports/
 # os/editor
 .DS_Store
 Thumbs.db

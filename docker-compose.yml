@@ -11,6 +11,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./images:/app/images
+      - ./exports:/app/exports    # a copy of every in-app Export drops here, as real files
     environment:
       - PORT=4500
       - HTTPS_PORT=4543
