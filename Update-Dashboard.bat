@@ -14,5 +14,6 @@ echo Downloading the latest version (needs internet)...
 if exist ghcr-token.txt (type ghcr-token.txt | docker login ghcr.io -u joshuakawalya766 --password-stdin >nul 2>&1)
 docker compose pull
 docker compose up -d
+docker image prune -f >nul 2>&1
 echo Updated. You can go offline again.
 pause
