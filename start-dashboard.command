@@ -11,5 +11,7 @@ if ! docker image inspect "$IMG" >/dev/null 2>&1; then
 fi
 echo "Starting (runs offline)…"
 docker compose up -d || { echo "Is Docker Desktop running?"; read -r -p "Enter…"; exit 1; }
-sleep 5; command -v open >/dev/null 2>&1 && open http://localhost:4500
+# Open the browser as soon as the dashboard answers (up to ~30s), not a fixed wait.
+( for _ in $(seq 1 60); do curl -sf -o /dev/null http://localhost:4500 && break; sleep 0.5; done
+  command -v open >/dev/null 2>&1 && open http://localhost:4500 ) &
 echo "Running at http://localhost:4500 — no internet needed from here on."; read -r -p "Press Enter to close…"
