@@ -10,3 +10,9 @@ exports/
 .DS_Store
 Thumbs.db
 *.log
+
+# any stray copy/backup of the key (editors leave ~ and .bak files behind)
+ghcr-token*
+.ghcr-token*
+*~
+!ghcr-token.example   # the TEMPLATE must stay tracked
