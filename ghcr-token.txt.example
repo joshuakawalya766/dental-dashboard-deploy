@@ -1,7 +1,0 @@
-Paste your update key (GitHub read:packages token) on the line below, then
-save this file as  .ghcr-token  (note the leading dot — that keeps it hidden, so it
-can't be deleted or copied by accident while browsing the folder).
-
-On Windows you may keep the name ghcr-token.txt — the launcher hides it for you.
-
-ghp_paste_your_token_here

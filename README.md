@@ -13,8 +13,8 @@ pulls a prebuilt app image from a registry; **no source code, no build tools.**
    or Docker Engine on Linux (`sudo apt install docker.io docker-compose-v2`).
 2. Put this folder on the computer (`git clone` it, or copy it).
 3. Make sure your **update key** is in this folder — **`.ghcr-token`** (hidden; your provider
-   supplies it). An older visible `ghcr-token.txt` still works and is hidden automatically on
-   first start. The Start
+   supplies it). *Windows: you may save it as `ghcr-token.txt` — the Start launcher renames and
+   hides it for you.* The Start
    launcher uses it to sign in and download the app automatically — nothing to type.
 
 ## Every day (double-click)
@@ -67,6 +67,6 @@ for a fresh install or an update).
      → **1-year expiry**. Test it: `echo TOKEN | docker login ghcr.io -u <user> --password-stdin`
      then `docker pull ghcr.io/<user>/dental-dashboard:latest`.
    - **Reliable fallback:** **Tokens (classic)** → scope **`read:packages`** only.
-2. Copy `ghcr-token.txt.example` → **`.ghcr-token`** (leading dot = hidden) and paste the token (this file is
+2. Copy `ghcr-token.example` → **`.ghcr-token`** (leading dot = hidden) and paste the token (this file is
    git-ignored — never commit it). Ship it inside the clinic's copy of this folder.
 3. Keep the image **package Private**. The token is read-only and revocable.

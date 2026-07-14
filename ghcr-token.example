@@ -1,0 +1,14 @@
+Your update key (a GitHub read:packages token, supplied by your provider).
+
+SETUP
+  1. Paste the key on the last line of this file (replace the placeholder).
+  2. Save it in this same folder as:   .ghcr-token      <- note the leading dot
+
+  On Windows, Explorer will not let you type a name starting with a dot. That's fine:
+  just save it as  ghcr-token.txt  and the Start launcher renames + hides it for you.
+
+The key is only used to download app updates. It is never sent anywhere else, and your
+clinic data does not depend on it — if it expires, the dashboard keeps working and simply
+tells you that update checks are paused.
+
+ghp_paste_your_token_here
