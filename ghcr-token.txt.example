@@ -1,15 +1,7 @@
-PASTE_YOUR_READ_ONLY_GHCR_TOKEN_HERE
-# ── How to use ─────────────────────────────────────────────────────────────
-# 1. Create a READ-ONLY token (once). Either works — always read-only + set an expiry:
-#    • Recommended (least privilege): Developer settings → Fine-grained tokens →
-#        Repository access: None · Permissions → Packages: Read-only · set an expiry.
-#        Test it first:  echo TOKEN | docker login ghcr.io -u joshuakawalya766 --password-stdin
-#                        docker pull ghcr.io/joshuakawalya766/dental-dashboard:latest
-#    • Reliable fallback: Tokens (classic) → scope ONLY  read:packages  (definitely works).
-# 2. Copy this file to  ghcr-token.txt  (drop the .example) and paste the token
-#    on the first line (delete these comment lines).
-# 3. Include ghcr-token.txt when you hand a clinic the deploy/ folder. The Start
-#    launcher logs in with it automatically, then pulls the private image.
-#
-# The token only allows PULLING your packages — nothing else — and you can revoke
-# it anytime from the same GitHub page. Never commit the real ghcr-token.txt.
+Paste your update key (GitHub read:packages token) on the line below, then
+save this file as  .ghcr-token  (note the leading dot — that keeps it hidden, so it
+can't be deleted or copied by accident while browsing the folder).
+
+On Windows you may keep the name ghcr-token.txt — the launcher hides it for you.
+
+ghp_paste_your_token_here

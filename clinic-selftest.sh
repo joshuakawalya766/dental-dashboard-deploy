@@ -29,7 +29,8 @@ YAML
 if ! docker image inspect "$IMG" >/dev/null 2>&1; then
   echo "▶ Image not local — logging in + pulling from GHCR (what a real clinic does)…"
   D="$(cd "$(dirname "$0")" && pwd)"
-  [ -f "$D/ghcr-token.txt" ] && docker login ghcr.io -u joshuakawalya766 --password-stdin < "$D/ghcr-token.txt" >/dev/null 2>&1
+  TF=""; [ -f "$D/.ghcr-token" ] && TF="$D/.ghcr-token"; [ -z "$TF" ] && [ -f "$D/ghcr-token.txt" ] && TF="$D/ghcr-token.txt"
+  [ -n "$TF" ] && docker login ghcr.io -u joshuakawalya766 --password-stdin < "$TF" >/dev/null 2>&1
   docker compose -f "$TMP/docker-compose.yml" pull
 fi
 echo "▶ Starting…"

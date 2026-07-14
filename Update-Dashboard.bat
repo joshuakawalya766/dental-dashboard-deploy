@@ -9,9 +9,16 @@ echo     (it lives in .\data and .\images and survives updates).
 echo ============================================================
 echo Press any key to update now, or close this window to cancel...
 pause >nul
-if exist ghcr-token.txt powershell -NoProfile -Command "Set-Content .env ('GHCR_TOKEN=' + (Get-Content ghcr-token.txt -Raw).Trim())"
+REM The update key. Marked HIDDEN so it can't be deleted or copied by accident while
+REM browsing the folder. (Windows keeps the .txt name; attrib +h hides it in Explorer.)
+if exist ghcr-token.txt attrib +h ghcr-token.txt
+set "TOKENFILE="
+if exist ghcr-token.txt set "TOKENFILE=ghcr-token.txt"
+if exist .ghcr-token set "TOKENFILE=.ghcr-token"
+if defined TOKENFILE powershell -NoProfile -Command "Set-Content .env ('GHCR_TOKEN=' + (Get-Content '%TOKENFILE%' -Raw).Trim())"
+if exist .env attrib +h .env
 echo Downloading the latest version (needs internet)...
-if exist ghcr-token.txt (type ghcr-token.txt | docker login ghcr.io -u joshuakawalya766 --password-stdin >nul 2>&1)
+if defined TOKENFILE (type "%TOKENFILE%" | docker login ghcr.io -u joshuakawalya766 --password-stdin >nul 2>&1)
 docker compose pull
 docker compose up -d
 docker image prune -f >nul 2>&1

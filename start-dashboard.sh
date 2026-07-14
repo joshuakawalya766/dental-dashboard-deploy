@@ -23,11 +23,17 @@ cd "$(dirname "$0")" || exit 1
 C="docker compose -f docker-compose.yml -f docker-compose.linux.yml"
 IMG="ghcr.io/joshuakawalya766/dental-dashboard:latest"
 # Pass the read-only token to the app (for the opportunistic "update available" check).
-[ -f ghcr-token.txt ] && printf 'GHCR_TOKEN=%s\n' "$(tr -d '\r\n' < ghcr-token.txt)" > .env
+# The update key. Kept as a HIDDEN file (.ghcr-token) so a clinic can't delete or copy it
+# by accident while browsing the folder. An existing visible ghcr-token.txt is migrated once.
+if [ -f ghcr-token.txt ] && [ ! -f .ghcr-token ]; then mv ghcr-token.txt .ghcr-token; fi
+TOKEN_FILE=""
+[ -f .ghcr-token ] && TOKEN_FILE=.ghcr-token
+[ -z "$TOKEN_FILE" ] && [ -f ghcr-token.txt ] && TOKEN_FILE=ghcr-token.txt
+[ -n "$TOKEN_FILE" ] && printf 'GHCR_TOKEN=%s\n' "$(tr -d '\r\n' < "$TOKEN_FILE")" > .env
 if ! docker image inspect "$IMG" >/dev/null 2>&1; then
   echo "First-time setup: downloading the dashboard (needs internet this once)…"
-  [ -f ghcr-token.txt ] && docker login ghcr.io -u joshuakawalya766 --password-stdin < ghcr-token.txt >/dev/null 2>&1
-  $C pull || { echo "Download failed — check the internet and ghcr-token.txt."; read -r -p "Press Enter…"; exit 1; }
+  [ -n "$TOKEN_FILE" ] && docker login ghcr.io -u joshuakawalya766 --password-stdin < "$TOKEN_FILE" >/dev/null 2>&1
+  $C pull || { echo "Download failed — check the internet and your update key (.ghcr-token)."; read -r -p "Press Enter…"; exit 1; }
 fi
 echo "Starting (runs offline)…"
 $C up -d || { echo "Could not start — is Docker running?  (sudo systemctl start docker)"; read -r -p "Press Enter…"; exit 1; }

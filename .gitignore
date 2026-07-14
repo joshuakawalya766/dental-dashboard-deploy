@@ -1,5 +1,6 @@
 # The real token + generated env — NEVER commit (this is a public repo)
 ghcr-token.txt
+.ghcr-token
 .env
 # runtime data created on the clinic machine
 data/

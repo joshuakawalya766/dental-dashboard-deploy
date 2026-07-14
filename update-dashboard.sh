@@ -26,13 +26,19 @@ echo "  • The dashboard briefly stops and restarts — your data is safe"
 echo "    (it lives in ./data and ./images and survives updates)."
 echo "————————————————————————————————————————————————————————"
 read -r -p "Press Enter to update now, or close this window to cancel… "
-[ -f ghcr-token.txt ] && printf 'GHCR_TOKEN=%s\n' "$(tr -d '\r\n' < ghcr-token.txt)" > .env
+# The update key. Kept as a HIDDEN file (.ghcr-token) so a clinic can't delete or copy it
+# by accident while browsing the folder. An existing visible ghcr-token.txt is migrated once.
+if [ -f ghcr-token.txt ] && [ ! -f .ghcr-token ]; then mv ghcr-token.txt .ghcr-token; fi
+TOKEN_FILE=""
+[ -f .ghcr-token ] && TOKEN_FILE=.ghcr-token
+[ -z "$TOKEN_FILE" ] && [ -f ghcr-token.txt ] && TOKEN_FILE=ghcr-token.txt
+[ -n "$TOKEN_FILE" ] && printf 'GHCR_TOKEN=%s\n' "$(tr -d '\r\n' < "$TOKEN_FILE")" > .env
 echo "Downloading the latest version (needs internet)…"
-[ -f ghcr-token.txt ] && docker login ghcr.io -u joshuakawalya766 --password-stdin < ghcr-token.txt >/dev/null 2>&1
+[ -n "$TOKEN_FILE" ] && docker login ghcr.io -u joshuakawalya766 --password-stdin < "$TOKEN_FILE" >/dev/null 2>&1
 if $C pull && $C up -d; then
   docker image prune -f >/dev/null 2>&1   # delete the previous version's now-orphaned layers so updates don't pile up on disk
   echo "Updated ✔  You can disconnect from the internet again."
 else
-  echo "Update failed — check the internet and ghcr-token.txt."
+  echo "Update failed — check the internet and your update key (.ghcr-token)."
 fi
 read -r -p "Press Enter to close this window… "
