@@ -1,4 +1,4 @@
-# IDEAL Dental — clinic deployment (pulls the prebuilt image; NO source code needed).
+# Dental dashboard — clinic deployment (pulls the prebuilt image; NO source code needed).
 # Start:  docker compose up -d      Stop:  docker compose down      Update:  docker compose pull && docker compose up -d
 # Your clinic data + photos live in ./data and ./images (created on first run) and survive updates.
 services:
