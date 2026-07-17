@@ -54,6 +54,29 @@ docker compose down                         # stop
   and survive updates. Back them up occasionally.
 - `clinic-selftest.sh` boots a throwaway copy on port 4700 to verify a clean install.
 
+## Phones & internet — how connecting works
+
+**Connecting a phone to the dashboard.** Put the dashboard **computer and the phone on the
+same Wi-Fi/router** — the clinic's normal Wi-Fi is perfect, and it doesn't matter whether that
+Wi-Fi itself has internet. On the same network, phones reach the dashboard reliably and **mobile
+data can stay on**.
+
+Why it works this way: the dashboard has a *local-only* address (like `192.168.1.50`) that does
+**not** exist on the public internet, so a phone can only reach it over the **same local network
+the computer is on**. On shared Wi-Fi the phone always routes to it correctly. The one setup to
+avoid is using a phone as its *own* hotspot **and** browsing the dashboard from that same phone
+with **mobile data on** — Android/iOS then send the request out over cellular instead of back
+into their own hotspot, and it fails with *"site can't be reached."* Fix: turn that phone's
+mobile data **off**, or (better) put both devices on a normal router. Mobile data by itself is
+never the problem — only that one hotspot-plus-mobile-data combination is.
+
+**Sending email needs the *computer* online.** Everything else runs offline, but **emailing a
+receipt is the one action that needs the dashboard computer to have working internet at that
+moment** — it connects out to Gmail (or your mail server) to send. The email is sent by the
+**computer running the dashboard, not by your phone**, so internet on your phone or another
+device does not help. If you see *"Couldn't reach the email server,"* it almost always means the
+**computer's** internet was down right then — reconnect that computer and try again.
+
 ## For the provider
 The app image is **private** on GitHub Container Registry. Clinics pull it with a
 **read-only token** — always read-only, always with an **expiry** (a **1-year** expiry is a
