@@ -2,6 +2,23 @@
 # START (offline-first). Only the FIRST run needs internet (to download the app);
 # every start after that boots from the local copy with no internet.
 
+# Open the browser as soon as the dashboard answers — launched NOW, detached, from THIS session
+# (on a double-click that's the file manager's, which owns the already-running browser). Doing it
+# up here means the tab is NOT gated behind the terminal re-exec below — spawning a terminal
+# emulator can be slow/janky, which is why a double-click used to lag while a real terminal was instant.
+if [ -z "$DASH_OPENED" ]; then
+  export DASH_OPENED=1
+  ( for _ in $(seq 1 60); do
+      if command -v curl >/dev/null 2>&1; then curl -sf -o /dev/null http://localhost:4500 && break
+      elif command -v wget >/dev/null 2>&1; then wget -q -O /dev/null http://localhost:4500 && break
+      else sleep 4; break; fi
+      sleep 0.5
+    done
+    for o in "xdg-open" "gio open" "sensible-browser" "x-www-browser"; do
+      command -v "${o%% *}" >/dev/null 2>&1 && { $o http://localhost:4500 >/dev/null 2>&1; break; }
+    done ) >/dev/null 2>&1 &
+fi
+
 # If double-clicked from a file manager (no terminal attached), reopen inside a terminal
 # window so the messages/prompts below are visible. (macOS .command and Windows .bat do
 # this on their own — this is only for Linux file managers.)
@@ -38,16 +55,6 @@ if ! docker image inspect "$IMG" >/dev/null 2>&1; then
 fi
 echo "Starting (runs offline)…"
 $C up -d || { echo "Could not start — is Docker running?  (sudo systemctl start docker)"; read -r -p "Press Enter…"; exit 1; }
-
-# Open the browser as soon as the dashboard actually answers (up to ~30s), instead of a
-# fixed guess — so the tab opens promptly whether run in a terminal or by double-click.
-( for _ in $(seq 1 60); do
-    if command -v curl >/dev/null 2>&1; then curl -sf -o /dev/null http://localhost:4500 && break
-    elif command -v wget >/dev/null 2>&1; then wget -q -O /dev/null http://localhost:4500 && break
-    else sleep 4; break; fi
-    sleep 0.5
-  done
-  command -v xdg-open >/dev/null 2>&1 && xdg-open http://localhost:4500 >/dev/null 2>&1 ) &
 
 echo "Running at http://localhost:4500 — no internet needed from here on."
 echo "Phone can't connect and a firewall is on?  sudo ufw allow 4500/tcp && sudo ufw allow 4543/tcp"
