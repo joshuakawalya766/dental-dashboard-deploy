@@ -4,7 +4,7 @@ SETUP
   1. Paste the key on the last line of this file (replace the placeholder).
   2. Save it in this same folder as:   .ghcr-token      <- note the leading dot
 
-  On Windows, Explorer will not let you type a name starting with a dot. That's fine:
+  If your file manager won't let you type a name starting with a dot, that's fine:
   just save it as  ghcr-token.txt  and the Start launcher renames + hides it for you.
 
 The key is only used to download app updates. It is never sent anywhere else, and your

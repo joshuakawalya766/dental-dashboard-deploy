@@ -1,29 +1,33 @@
-# Dental Dashboard — deployment kit
+# Dental Dashboard — deployment kit (Linux / macOS, Docker)
 
-Everything a clinic computer needs to run the **Dental Dashboard** — an offline-first
-dashboard for dental clinics (branded social posts, receipts, searchable records). It
-pulls a prebuilt app image from a registry; **no source code, no build tools.**
+Everything a **Linux or macOS** clinic computer needs to run the **Dental Dashboard** — an
+offline-first dashboard for dental clinics (branded social posts, receipts, searchable records).
+It pulls a prebuilt app image from a registry; **no source code, no build tools.**
+
+> **Windows clinics don't use this kit.** Windows runs the **native `DentalDashboard-Windows`
+> bundle** (bundled `node.exe`, no Docker) — a separate zip your provider gives you. This kit is
+> Docker-only, for Linux and macOS.
 
 > This repo is just the **deployment scripts** — it contains no secrets. The app image
 > itself is **private**; pulling it needs a read-only token your provider gives you
 > (see [For the provider](#for-the-provider)).
 
 ## One-time setup
-1. Install **Docker** — Docker Desktop on Windows/Mac (<https://www.docker.com/products/docker-desktop>),
+1. Install **Docker** — Docker Desktop on macOS (<https://www.docker.com/products/docker-desktop>),
    or Docker Engine on Linux (`sudo apt install docker.io docker-compose-v2`).
 2. Put this folder on the computer (`git clone` it, or copy it).
 3. Make sure your **update key** is in this folder — **`.ghcr-token`** (hidden; your provider
-   supplies it). *Windows: you may save it as `ghcr-token.txt` — the Start launcher renames and
-   hides it for you.* The Start
-   launcher uses it to sign in and download the app automatically — nothing to type.
+   supplies it). *If your file manager won't let you create a name starting with a dot, save it as
+   `ghcr-token.txt` — the Start launcher renames and hides it for you.* The Start launcher uses it
+   to sign in and download the app automatically — nothing to type.
 
 ## Every day (double-click)
-| | Windows | macOS | Linux | Internet? |
-|---|---|---|---|---|
-| **Start** | `Start-Dashboard.bat` | `start-dashboard.command` | `start-dashboard.sh` | only the **very first** time |
-| **Stop** | `Stop-Dashboard.bat` | `stop-dashboard.command` | `stop-dashboard.sh` | no |
-| **Restart** | `Restart-Dashboard.bat` | `restart-dashboard.command` | `restart-dashboard.sh` | no |
-| **Update** | `Update-Dashboard.bat` | `update-dashboard.command` | `update-dashboard.sh` | **yes** (a couple of minutes) |
+| | macOS | Linux | Internet? |
+|---|---|---|---|
+| **Start** | `start-dashboard.command` | `start-dashboard.sh` | only the **very first** time |
+| **Stop** | `stop-dashboard.command` | `stop-dashboard.sh` | no |
+| **Restart** | `restart-dashboard.command` | `restart-dashboard.sh` | no |
+| **Update** | `update-dashboard.command` | `update-dashboard.sh` | **yes** (a couple of minutes) |
 
 It opens at **<http://localhost:4500>**. First run is **locked** — paste the license key
 from your provider in **Settings → License → Activate**. Built-in dental tips are already
@@ -48,7 +52,7 @@ docker compose down                         # stop
 ## Notes
 - **Linux** uses **host networking** (via the launchers) so the phone-QR auto-detects the
   current Wi-Fi address. If a firewall is on: `sudo ufw allow 4500/tcp && sudo ufw allow 4543/tcp`.
-- **Windows/Mac**: if the phone can't connect, open the 📱 QR screen and type this
+- **macOS** uses **bridge** mode: if the phone can't connect, open the 📱 QR screen and type this
   computer's Wi-Fi address once (it's remembered).
 - Your clinic data + photos live in **`./data`** and **`./images`** (created on first run)
   and survive updates. Back them up occasionally.
@@ -93,3 +97,6 @@ for a fresh install or an update).
 2. Copy `ghcr-token.example` → **`.ghcr-token`** (leading dot = hidden) and paste the token (this file is
    git-ignored — never commit it). Ship it inside the clinic's copy of this folder.
 3. Keep the image **package Private**. The token is read-only and revocable.
+
+> Windows clinics: hand over the **`DentalDashboard-Windows`** native zip instead of this kit —
+> it needs no Docker and no token.
