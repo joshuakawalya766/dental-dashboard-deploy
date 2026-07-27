@@ -10,7 +10,14 @@ if ! docker image inspect "$IMG" >/dev/null 2>&1; then
   docker compose pull || { echo "Download failed — check internet + ghcr-token.txt."; read -r -p "Enter…"; exit 1; }
 fi
 echo "Starting (runs offline)…"
-docker compose up -d || { echo "Is Docker Desktop running?"; read -r -p "Enter…"; exit 1; }
+docker compose up -d || {
+  echo
+  echo "Could not start — check the error above. Most likely:"
+  echo "  • \"container name '/dental-dashboard' is already in use\" → another copy is running,"
+  echo "    usually a second install/test folder (the name is fixed).  Fix:  docker rm -f dental-dashboard"
+  echo "  • Docker Desktop isn't running → open it and wait for \"Engine running.\""
+  read -r -p "Enter…"; exit 1
+}
 # Open the browser as soon as the dashboard answers (up to ~30s), not a fixed wait.
 ( for _ in $(seq 1 60); do curl -sf -o /dev/null http://localhost:4500 && break; sleep 0.5; done
   command -v open >/dev/null 2>&1 && open http://localhost:4500 ) &

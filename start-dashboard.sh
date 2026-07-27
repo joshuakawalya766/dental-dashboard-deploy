@@ -54,7 +54,14 @@ if ! docker image inspect "$IMG" >/dev/null 2>&1; then
   $C pull || { echo "Download failed — check the internet and your update key (.ghcr-token)."; read -r -p "Press Enter…"; exit 1; }
 fi
 echo "Starting (runs offline)…"
-$C up -d || { echo "Could not start — is Docker running?  (sudo systemctl start docker)"; read -r -p "Press Enter…"; exit 1; }
+$C up -d || {
+  echo
+  echo "Could not start — check the error above. Most likely:"
+  echo "  • \"container name '/dental-dashboard' is already in use\" → another copy is running,"
+  echo "    usually a second install/test folder (the name is fixed).  Fix:  docker rm -f dental-dashboard"
+  echo "  • Docker isn't running →  sudo systemctl start docker"
+  read -r -p "Press Enter…"; exit 1
+}
 
 echo "Running at http://localhost:4500 — no internet needed from here on."
 echo "Phone can't connect and a firewall is on?  sudo ufw allow 4500/tcp && sudo ufw allow 4543/tcp"
